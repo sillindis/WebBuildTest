@@ -37,15 +37,20 @@
     margin: 10px auto 0;
     width: 141px;
     height: 18px;
-    background: url('progress-bar-empty-light.png') no-repeat center;
-    background-size: contain;
+    background: url('progress-bar-empty-dark.png') no-repeat center;
+    background-size: 100% 100%;
+    display: block;
+    visibility: visible;
 }
 
 #unity-progress-bar-full {
     width: 0%;
-    height: 18px;
-    background: url('progress-bar-full-light.png') no-repeat center;
-    background-size: contain;
+    height: 100%;
+    background: url('progress-bar-full-dark.png') no-repeat left center;
+    background-size: 100% 100%;
+    display: block;
+    visibility: visible;
+    margin-top: 0;
 }
 
 #unity-warning {
