@@ -26,7 +26,13 @@
     <script>
       window.addEventListener("load", function () {
         if ("serviceWorker" in navigator) {
-          navigator.serviceWorker.register("ServiceWorker.js");
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+              registration.unregister();
+            }
+          }).then(function() {
+            navigator.serviceWorker.register("ServiceWorker.js");
+          });
         }
       });
 
@@ -36,12 +42,6 @@
       var progressBarFull = document.querySelector("#unity-progress-bar-full");
       var warningBanner = document.querySelector("#unity-warning");
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
       function unityShowBanner(msg, type) {
         function updateBannerVisibility() {
           warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
@@ -61,12 +61,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/WebBuildTest.loader.js";
+      var loaderUrl = buildUrl + "/WebBuildTest.loader.js?" + Date.now();
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/WebBuildTest.data.unityweb",
-        frameworkUrl: buildUrl + "/WebBuildTest.framework.js.unityweb",
-        codeUrl: buildUrl + "/WebBuildTest.wasm.unityweb",
+        dataUrl: buildUrl + "/WebBuildTest.data.unityweb?" + Date.now(),
+        frameworkUrl: buildUrl + "/WebBuildTest.framework.js.unityweb?" + Date.now(),
+        codeUrl: buildUrl + "/WebBuildTest.wasm.unityweb?" + Date.now(),
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "숏폼형 퀴즈 솔루션 왓퀴즈!",
@@ -74,15 +74,7 @@
         showBanner: unityShowBanner,
       };
 
-      // By default Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
-
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
         var meta = document.createElement('meta');
         meta.name = 'viewport';
         meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';

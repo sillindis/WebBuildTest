@@ -9,12 +9,11 @@ const contentToCache = [
 
 self.addEventListener('install', function (e) {
     console.log('[Service Worker] Install');
-    self.skipWaiting(); // 즉시 활성화
+    self.skipWaiting();
 });
 
 self.addEventListener('activate', function(e) {
     console.log('[Service Worker] Activate');
-    // 기존 캐시 삭제
     e.waitUntil(
         caches.keys().then(function(keyList) {
             return Promise.all(keyList.map(function(key) {
@@ -29,10 +28,10 @@ self.addEventListener('fetch', function (e) {
         fetch(e.request, {
             cache: 'no-store',
             headers: {
-                'Cache-Control': 'no-cache'
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
             }
         }).catch(function() {
-            // 네트워크 요청이 실패한 경우에만 캐시 사용
             return caches.match(e.request);
         })
     );
